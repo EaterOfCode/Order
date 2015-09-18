@@ -1,0 +1,14 @@
+{
+    "name": "eaterofcode/order",
+    "description": "Automated System Management in PHP",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Corne Oppelaar",
+            "email": "hello@eaterofco.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
