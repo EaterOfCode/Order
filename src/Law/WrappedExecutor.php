@@ -19,7 +19,7 @@ class WrappedExecutor {
         file_put_contents($tmpPhpFile, $php);
 
         include $tmpPhpFile;
-//        @unlink($tmpPhpFile);
+        @unlink($tmpPhpFile);
     }
 
     static public function registerFunctionFile($file)
@@ -41,7 +41,6 @@ class WrappedExecutor {
     static public function boot()
     {
         WrappedExecutor::registerFunctionFile(__DIR__ . '/Wrapped/functions.php');
-        ini_set('include_path', sys_get_temp_dir() . '/order/:' . ini_get('include_path'));
     }
 }
 

@@ -11,7 +11,7 @@ class Wrapped {
         $this->lawFile = $lawFile;  
     }
 
-    public function execute()
+    public function load()
     {
         if (!\is_file($this->lawFile)) {
             throw new FileNotFound($this->lawFile);
@@ -25,6 +25,11 @@ class Wrapped {
 
         WrappedExecutor::clearDefinitions();
         WrappedExecutor::execute($this->lawFile);
-        return WrappedExecutor::getDefinitions();
+        $this->definitionCollection = WrappedExecutor::getDefinitions();
+    }
+
+    public function getDefinitionCollection()
+    {
+        return $this->definitionCollection;
     }
 }

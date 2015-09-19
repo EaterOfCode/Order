@@ -15,5 +15,8 @@
         }
     },
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "league/flysystem": "^1.1@dev",
+        "league/flysystem-memory": "^1.0@dev"
+    }
 }
