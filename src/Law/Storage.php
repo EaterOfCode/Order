@@ -51,23 +51,26 @@ class Storage {
         return false;
     }
 
-    public function getLawFile($path)
+    public function getLaw($path)
     {
         $lawFolders = $this->getLawFolders();
         $flySystem  = $this->getFlySystem();
         foreach ($lawFolders as $lawFolder) {
-            if ($flySystem->has($lawFolder . $path)) {
-                $lawFile = $flySystem->read($lawFolder . $path);
 
-                return $this->wrapLawFile($lawFile);
+            $lawPath = $lawFolder . $path;
+            if ($flySystem->has($lawPath)) {
+                $lawFile = $flySystem->read($lawPath);
+                $wrapped = $this->wrapLawFile($lawFile, $lawPath);
+
+                return $wrapped;
             }
         }
 
         throw FileNotFoundException($path, $lawFolders);;
     }
 
-    private function wrapLawFile($lawFile)
+    private function wrapLawFile($lawFile, $lawPath)
     {
-        return preg_replace('/\<\?(php)?/', '<?php namespace ' . __NAMESPACE__ . '\\Wrapped;', $lawFile, 1);   
+        return new Wrapped($lawFile, $lawPath);
     }
 }

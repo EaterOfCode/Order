@@ -4,32 +4,37 @@ namespace Eater\Order\Law;
 
 class Wrapped {
 
-    private $lawFile;
+    private $path;
+    private $contents;
+    private $wrappedContents;
 
-    public function __construct($lawFile)
+    public function __construct($contents, $path)
     {
-        $this->lawFile = $lawFile;  
+        $this->contents = $contents;
+        $this->path     = $path;
     }
 
     public function load()
     {
-        if (!\is_file($this->lawFile)) {
-            throw new FileNotFound($this->lawFile);
-        }
-
-        \exec('php -l ' . escapeshellarg($this->lawFile), $output, $returnCode);
-
-        if ($returnCode !== 0) {
-            throw new InvalidSyntax($output, $this->lawFile);
-        }
-
-        WrappedExecutor::clearDefinitions();
-        WrappedExecutor::execute($this->lawFile);
-        $this->definitionCollection = WrappedExecutor::getDefinitions();
+        $this->wrappedContents = preg_replace('/\<\?(php)?/', '<?php namespace ' . __NAMESPACE__ . '\\Wrapped;', $this->getContents(), 1);
     }
 
-    public function getDefinitionCollection()
+    public function getWrappedContents()
     {
-        return $this->definitionCollection;
+        if ($this->wrappedContents === null) {
+            $this->load();
+        }
+
+        return $this->wrappedContents;
+    }
+
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    public function getContents()
+    {
+        return $this->contents;
     }
 }

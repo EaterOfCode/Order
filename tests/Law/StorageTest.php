@@ -40,8 +40,12 @@ class StorageTest extends PHPUnit_Framework_TestCase {
     public function testWrapping()
     {
         $storage = $this->createStorage();
+        $wrappedLaw = $storage->getLaw('law');
+        $wrappedAnother = $storage->getLaw('another');
 
-        $this->assertEquals('<?php namespace Eater\Order\Law\Wrapped; file("test");', $storage->getLawFile('law'));
-        $this->assertEquals('<?php namespace Eater\Order\Law\Wrapped; file("somewhere");', $storage->getLawFile('another'));
+        $this->assertEquals('law', $wrappedLaw->getPath());
+        $this->assertEquals('henk/is-there/another', $wrappedAnother->getPath());
+        $this->assertEquals('<?php file("test");', $wrappedLaw->getContents());
+        $this->assertEquals('<? file("somewhere");', $wrappedAnother->getContents());
     }
 }
