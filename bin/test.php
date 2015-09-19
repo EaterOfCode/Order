@@ -19,5 +19,18 @@ Stream::setStorage(
     )
 );
 
-var_dump(Loader::load(__DIR__ . '/../storage/test.law.php'));
+$collection = Loader::load(__DIR__ . '/../storage/test.law.php');
+$errors = $collection->validate();
+if (!empty($errors)) {
+    echo "Errors occured: \n\n";
+    echo implode(
+        "\n",
+        array_map(
+            function ($ex) {
+                return $ex->getMessage();
+            }, 
+            $errors
+        )
+    );
+}
 

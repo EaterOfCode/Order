@@ -26,7 +26,7 @@ class Loader {
 
     static public function addDefinition($definition)
     {
-        static::$definitions[] = $definitions;   
+        static::$definitions->add($definition);
     }
 
     static private function getDefinitions()

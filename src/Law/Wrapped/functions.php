@@ -2,6 +2,11 @@
 
 namespace Eater\Order\Law\Wrapped;
 
-function file($path) {
-    echo $path;
+use Eater\Order\Definition;
+use Eater\Order\Law\Loader;
+
+function file($path, $source = null) {
+    $def = new Definition\File($path, $source);
+    Loader::addDefinition($def);
+    return $def;
 }
