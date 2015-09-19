@@ -1,0 +1,3 @@
+<?php
+
+file("Hello world!");

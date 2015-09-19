@@ -9,6 +9,11 @@
             "email": "hello@eaterofco.de"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Eater\\Order\\":"src/"
+        }
+    },
     "minimum-stability": "dev",
     "require": {}
 }
