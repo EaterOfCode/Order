@@ -28,57 +28,42 @@ class TextDiff extends Diff {
 
     public function getPrettyDiff()
     {
-        $tokenToColorMap = [
-            2 => [self::getStateColor(Diff::delete) . '- ', "\033[0m"],
-            1 => [self::getStateColor(Diff::create) . '+ ', "\033[0m"],
-            0 => ["  ",""]
-        ];
-
         $prettyDiff = [];
         $differ = new Differ();
 
         $diffArr = $differ->diffToArray($this->fileChanges[0], $this->fileChanges[1]);
 
         $buffer = [];
-
-        $lastMatchStart = 0;
-        $hadMatch       = false;
-        $lastOldStart   = 0;
-        $lastOld        = false;
-        $lastWritten    = 0;
+        $lastMutation = false;
         foreach ($diffArr as $i => $diffToken) {
-            if ($diffToken[1] === 0 && !$lastOld) {
-                $lastOld = true;
-                $lastOldStart = $i;
-            }
-
-            if ($i - 3 === $lastOldStart && $hadMatch) {
-                $lastWritten = $i;
-                $buffer = array_merge($buffer, array_slice($diffArr, $i - 3, 3));
+            if ($lastMutation !== false && $i - 3 === $lastMutation) {
+                $prettyDiff = array_merge($prettyDiff, $buffer);
+                $buffer = [];
             }
 
             if ($diffToken[1] !== 0) {
-
-                if ($lastOld) {
-                    $scrollBack = min($i - max($lastOldStart, $lastWritten), 3);
-                    if ($scrollBack > 0) {
-                        $buffer = array_merge($buffer, array_slice($diffArr, $i - $scrollBack, $scrollBack));
-                    }
-                }
-
-                $hadMatch = true;
-                $buffer[] = $diffToken;
-                if ($lastOld) {
-                    $lastMatchStart = $i;
-                }
-                $lastOld = false;
+                $prettyDiff = array_merge($prettyDiff, $buffer);
+                $buffer = [];
+                $prettyDiff[] = $this->getPrettyMutation($diffToken);
+                $lastMutation = $i;
+            } else {
+                $buffer[] = $this->getPrettyMutation($diffToken);
             }
-        }
 
-        foreach ($buffer as $diffToken) {
-            $prettyDiff[] = $tokenToColorMap[$diffToken[1]][0] . $diffToken[0] . $tokenToColorMap[$diffToken[1]][1];
+            $buffer = array_slice($buffer, -3);
         }
 
         return implode("\n", $prettyDiff);
+    }
+
+    public function getPrettyMutation($diffToken)
+    {
+        $tokenToColorMap = [
+            2 => [self::getStateColor(Diff::delete) . '- ', "\033[0m"],
+            1 => [self::getStateColor(Diff::create) . '+ ', "\033[0m"],
+            0 => ["  ",""]
+        ];
+
+        return $tokenToColorMap[$diffToken[1]][0] . $diffToken[0] . $tokenToColorMap[$diffToken[1]][1];
     }
 }

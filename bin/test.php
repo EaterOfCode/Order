@@ -19,7 +19,7 @@ Stream::setStorage(
     )
 );
 
-$collection = Loader::load(__DIR__ . '/../storage/test.law.php');
+$collection = Loader::load($argv[1]);
 $errors = $collection->validate();
 if (!empty($errors)) {
     echo "Errors occured: \n\n";
@@ -44,4 +44,6 @@ foreach ($actionChain as $definition) {
     {
         echo $diff->getPretty();
     }
+
+    $state->apply();
 }

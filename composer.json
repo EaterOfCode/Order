@@ -3,6 +3,7 @@
     "description": "Automated System Management in PHP",
     "type": "project",
     "license": "MIT",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Corne Oppelaar",
@@ -14,10 +15,9 @@
             "Eater\\Order\\":"src/"
         }
     },
-    "minimum-stability": "dev",
     "require": {
-        "league/flysystem": "^1.1@dev",
-        "league/flysystem-memory": "^1.0@dev",
-        "sebastian/diff": "^1.3@dev"
+        "league/flysystem": "^1.0",
+        "league/flysystem-memory": "^1.0",
+        "sebastian/diff": "^1.3"
     }
 }
