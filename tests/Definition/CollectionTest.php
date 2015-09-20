@@ -47,10 +47,10 @@ class DefinitionTest extends PHPUnit_Framework_TestCase {
 
     public function testCorrectOrder()
     {
-        $def1      = new Dummy('1');
-        $def2      = new Dummy('2');
-        $def3      = new Dummy('3');
-        $def4      = new Dummy('4');
+        $def1 = new Dummy('1');
+        $def2 = new Dummy('2');
+        $def3 = new Dummy('3');
+        $def4 = new Dummy('4');
         $def2->requires(clone $def1);
         $def3->requires(clone $def1);
         $def4->requires(clone $def2);
@@ -76,5 +76,26 @@ class DefinitionTest extends PHPUnit_Framework_TestCase {
             $this->assertEquals($def3, $actionChain[2]);
             $this->assertEquals($def4, $actionChain[3]);
         }
+    }
+
+    public function testUnvalidatedRequiresNotBeingAddedToActionChain()
+    {
+        $def1 = new Dummy('1');
+        $def2 = new Dummy('2');
+        $def3 = new Dummy('3');
+
+        $def1->setErrors(["Please don't"]);
+        $def2->requires(clone $def1);
+        $def3->requires(clone $def2);
+
+        $collection = new Collection();
+        $collection->add($def1);
+        $collection->add($def2);
+        $collection->add($def3);
+
+        $errors = $collection->validate();
+        $this->assertEquals(3, count($errors));
+        $actionChain = $collection->getActionChain();
+        $this->assertEquals(2, count($actionChain));
     }
 }

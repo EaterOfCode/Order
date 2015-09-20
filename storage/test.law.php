@@ -1,10 +1,8 @@
 <?php
 
-file("/home/test/do-thing")
+file("/home/eater/do-thing")
     ->contents("bash ./do-other-thing;")
-    ->requires(file("/home/test/do-other-thing"))
-    ->requires(file("/home/yes"));
+    ->requires(file("/home/eater/do-other-thing"));
 
-file("/home/test/do-other-thing")
-    ->source("http://eoc.io/dotfiles")
-    ->requires(file("/home/test/do-other-thing"));
+file("/home/eater/do-other-thing")
+    ->source("http://eoc.io/dotfiles");

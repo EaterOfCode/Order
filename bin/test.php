@@ -28,9 +28,20 @@ if (!empty($errors)) {
         array_map(
             function ($ex) {
                 return $ex->getMessage();
-            }, 
+            },
             $errors
         )
     );
+    die("\n");
 }
 
+$actionChain = $collection->getActionChain();
+
+foreach ($actionChain as $definition) {
+    $state = $definition->getDesirableState();
+
+    foreach($state->getDiff() as $diff)
+    {
+        echo $diff->getPretty();
+    }
+}

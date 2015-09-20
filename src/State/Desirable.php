@@ -1,6 +1,6 @@
 <?php
 
-namespace \Eater\Order\State;
+namespace Eater\Order\State;
 
 abstract class Desirable {
 
@@ -11,6 +11,6 @@ abstract class Desirable {
     public function apply()
     {
         throw new \RuntimeException("Not implemented");
-    } 
+    }
 
 }

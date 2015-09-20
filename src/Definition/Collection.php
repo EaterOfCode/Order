@@ -20,7 +20,7 @@ class Collection {
     }
 
     protected function populateReferenceArrays()
-    {   
+    {
         $errors = [];
         $byName = [];
         $byId   = [];
@@ -32,7 +32,7 @@ class Collection {
             } else {
                 $id   = $definition->getIdentifier();
 
-                if (!isset($byId[$id])) { 
+                if (!isset($byId[$id])) {
                     $byId[$id] = $definition;
                 } else {
                     $errors[] = new NonUniqueIdentifier($id, $definition, $byId[$id]);
@@ -73,7 +73,7 @@ class Collection {
     {
         return array_map(
             function($action){
-                return $this->definitionByIdentifier[$action]; 
+                return $this->definitionByIdentifier[$action];
             },
             $this->actionChain
         );
@@ -83,7 +83,7 @@ class Collection {
     {
 
         $errors = $this->validateDefinition($def);
-            
+
         if (!empty($errors)) {
             return [[], $errors];
         }
@@ -126,8 +126,8 @@ class Collection {
     private function validateDefinition($def)
     {
         return array_map(
-            function($error){
-                new InvalidConfiguration($error, $def); 
+            function($error) use ($def) {
+                return new InvalidConfiguration($error, $def);
             },
             $def->validate()
         );
