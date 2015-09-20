@@ -18,6 +18,8 @@ The biggest bottleneck I found, was finding a syntax that wouldn't hurt your fin
 An example of a law file would be:
 
 ```
+<?php
+
 file("/etc/hostname")
   ->contents(config('info.hostname'))
   ->require(service("dhcpd"));
