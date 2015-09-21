@@ -7,6 +7,7 @@ abstract class Definition {
     protected $type                = 'dummy';
     protected $identifier          = "";
     protected $isRequire           = false;
+    protected $isIgnored           = false;
 
     public function requires(Definition $defintion)
     {
@@ -38,5 +39,24 @@ abstract class Definition {
     public function isRequire()
     {
         return $this->isRequire;
+    }
+
+    public function ignore()
+    {
+        $this->isIgnored = true;
+
+        return $this;
+    }
+
+    public function notice()
+    {
+        $this->isIgnored = false;
+
+        return $this;
+    }
+
+    public function getIgnored()
+    {
+        return $this->isIgnored;
     }
 }

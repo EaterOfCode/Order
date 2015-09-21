@@ -27,6 +27,10 @@ class Collection {
 
         foreach ($this->definitions as $definition)
         {
+            if ($definition->getIgnored()) {
+                continue;
+            }
+
             if ($definition->isRequire()) {
                 $this->requiresDefinitions[] = $definition;
             } else {

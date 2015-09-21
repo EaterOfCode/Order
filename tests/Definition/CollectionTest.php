@@ -98,4 +98,19 @@ class DefinitionTest extends PHPUnit_Framework_TestCase {
         $actionChain = $collection->getActionChain();
         $this->assertEquals(2, count($actionChain));
     }
+
+    public function testIgnoredDefinition()
+    {
+        $def1 = new Dummy('1');
+
+        $def1->ignore();
+
+        $collection = new Collection();
+        $collection->add($def1);
+
+        $errors = $collection->validate();
+        $this->assertEquals(0, count($errors));
+        $actionChain = $collection->getActionChain();
+        $this->assertEquals(0, count($actionChain));
+    }
 }
