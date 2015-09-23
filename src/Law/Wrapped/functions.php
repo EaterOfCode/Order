@@ -5,8 +5,15 @@ namespace Eater\Order\Law\Wrapped;
 use Eater\Order\Definition;
 use Eater\Order\Law\Loader;
 
-function file($path, $source = null) {
-    $def = new Definition\File($path, $source);
+function file($path, $options = []) {
+    $def = new Definition\File($path, $options);
+    Loader::addDefinition($def);
+    return $def;
+}
+
+function package($package, $options = [])
+{
+    $def = new Definition\Package($package, $options);
     Loader::addDefinition($def);
     return $def;
 }

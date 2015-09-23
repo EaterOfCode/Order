@@ -7,7 +7,9 @@ use Eater\Order\Law\Loader;
 use Eater\Order\Law\Storage;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
+use Eater\Order\Util\PackageProvider\Wrapper;
 
+Wrapper::load();
 Stream::register('law');
 
 Stream::setStorage(

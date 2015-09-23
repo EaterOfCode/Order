@@ -67,10 +67,10 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", inline: <<-SHELL
      sudo apt-get update
      sudo apt-get install -y php5-cli git
-     git clone https://github.com/EaterOfCode/Order.git;
      curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/bin --filename=composer
-     cd Order;
+     cd /vagrant/;
      composer install;
-     php bin/test.php;
+     php bin/test.php storage/create.law.php;
+     sl;
   SHELL
 end

@@ -15,15 +15,32 @@ class File extends Definition {
     protected $user;
     protected $group;
 
-    public function __construct($file, $source = null)
+    public function __construct($file, $options = [])
     {
         $this->file = $file;
+        $this->setIdentifier($file);
 
-        if ($source !== null) {
-            $this->source = $source;
+        if (isset($options['contents'])) {
+            $this->contents = $options['contents'];
+        } else if (isset($options['source'])) {
+            $this->source = $options['source'];
         }
 
-        $this->setIdentifier($file);
+        if (isset($options['user'])) {
+            $this->user = $options['user'];
+        }
+
+        if (isset($options['permissions'])) {
+            $this->permissions = $options['permissions'];
+        }
+
+        if (isset($options['exist'])) {
+            $this->shouldExist = $options['exist'];
+        }
+
+        if (isset($options['user'])) {
+            $this->group = $options['group'];
+        }
     }
 
     public function contents($contents)

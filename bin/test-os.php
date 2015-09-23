@@ -7,7 +7,7 @@ use Eater\Order\Util\PackageProvider\Wrapper;
 
 Wrapper::load();
 
-$pp = Wrapper::getPackgeProvider();
+$pp = Wrapper::getPackageProvider();
 
 echo "Current OS is: " . OsProbe::probe() . "\n";
 echo "Package provider for this OS is: " . get_class($pp) . "\n";

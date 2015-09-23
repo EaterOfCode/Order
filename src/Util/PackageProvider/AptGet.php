@@ -13,17 +13,17 @@ class AptGet {
 
     public function install($package)
     {
-        return ExecResult::createFromCommand('apt-get install -qy ' . escapeshellarg($package));
+        return ExecResult::createFromCommand('apt-get install -qy ' . escapeshellarg($package) . ' 2>&1');
     }
 
     public function remove($package)
     {
-        return ExecResult::createFromCommand('apt-get remove -yq ' . escapeshellarg($package));
+        return ExecResult::createFromCommand('apt-get remove -yq ' . escapeshellarg($package) . '2>&1');
     }
 
-    public function isInstalled()
+    public function isInstalled($package)
     {
-        exec('apt-cache pkgnames | grep \'^\'' . escapeshellarg($package) . '\'$\'', $output, $returnCode);
+        exec("dpkg-query -Wf'\${db:Status-abbrev}' " . escapeshellarg($package) . " 2>/dev/null | grep -q '^i'" , $output, $returnCode);
 
         return $returnCode === 0;
     }

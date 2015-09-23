@@ -18,15 +18,24 @@ class Wrapper {
         }
     }
 
-    static public function getPackgeProvider()
+    static public function getPackageProvider()
     {
         $os = OsProbe::probe();
 
         if (!isset(static::$repo[$os])) {
-            throw UnknownPackageProvider(null, $os);
+            throw new UnknownPackageProvider(null, $os);
         }
 
         return static::$repo[$os];
+    }
+
+    static public function getPackageProviderByName($name)
+    {
+        if (!isset(static::$packageProviderByName[$name])) {
+            throw new UnknownPackageProvider($name, null);
+        }
+
+        return static::$packageProviderByName[$name];
     }
 
     static public function load()
