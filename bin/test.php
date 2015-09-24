@@ -39,13 +39,26 @@ if (!empty($errors)) {
 
 $actionChain = $collection->getActionChain();
 
+$stateByIdentifier = [];
 foreach ($actionChain as $definition) {
     $state = $definition->getDesirableState();
+    $stateByIdentifier[$definition->getIdentifier()] = $state;
 
-    foreach($state->getDiff() as $diff)
-    {
-        echo $diff->getPretty();
+    $requires = [];
+    foreach ($definition->getRequires() as $require) {
+        $requires[] = $stateByIdentifier[$require->getIdentifier()];
     }
 
-    $state->apply();
+    $state->setRequires($requires);
+
+    if ($state->areRequiresSatisfied()) {
+        foreach($state->getDiff() as $diff)
+        {
+            echo $diff->getPretty();
+        }
+
+        $state->apply();
+    } else {
+        echo "Couldn't apply state: " . $definition->getIdentifier() . " because of failed dependecies\n";
+    }
 }

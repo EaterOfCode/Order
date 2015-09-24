@@ -20,7 +20,6 @@ class Package extends Desirable {
         $this->package = $package;
         $this->state = $state;
 
-            var_dump($provider);
         if ($provider === null) {
             $this->provider = Wrapper::getPackageProvider();
         } else {
@@ -44,17 +43,25 @@ class Package extends Desirable {
     public function apply()
     {
         $currentState = $this->getCurrentState();
+        $result;
 
         if ($this->state !== $currentState) {
             switch ($this->state)
             {
                 case Package::INSTALLED:
-                    $this->provider->install($this->package);
+                    $result = $this->provider->install($this->package);
                     break;
                 case Package::REMOVED:
-                    $this->provider->remove($this->package);
+                    $result = $this->provider->remove($this->package);
                     break;
             };
+
+            if (!$result->isSuccess()) {
+                $this->fail();
+                echo "Package " . ($this->state === Package::INSTALLED ? 'install' : 'removal') . " failed with exit code ({$result->getReturnCode()})\n";
+                echo "Executed: " . $result->getCommand() . "\nOutput:\n";
+                echo implode("\n", $result->getOutput())  . "\n";
+            }
         }
     }
 

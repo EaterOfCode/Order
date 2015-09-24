@@ -8,7 +8,7 @@ class AptGet {
 
     public function sync()
     {
-        return ExecResult::createFromCommand('apt-get update -q');
+        return ExecResult::createFromCommand('apt-get update -q 2>&1');
     }
 
     public function install($package)

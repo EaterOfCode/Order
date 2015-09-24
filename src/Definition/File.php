@@ -21,7 +21,7 @@ class File extends Definition {
         $this->setIdentifier($file);
 
         if (isset($options['contents'])) {
-            $this->contents = $options['contents'];
+            $this->contents = "".$options['contents'];
         } else if (isset($options['source'])) {
             $this->source = $options['source'];
         }
@@ -45,7 +45,7 @@ class File extends Definition {
 
     public function contents($contents)
     {
-        $this->contents = $contents;
+        $this->contents = "".$contents;
         $this->source = null;
         return $this;
     }

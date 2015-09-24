@@ -8,22 +8,22 @@ class Pkgng {
 
     public function sync()
     {
-        return ExecResult::createFromCommand('pkg update');
+        return ExecResult::createFromCommand('pkg update 2>&1');
     }
 
     public function install($package)
     {
-        return ExecResult::createFromCommand('pkg install -y ' . escapeshellarg($package));
+        return ExecResult::createFromCommand('pkg install -y ' . escapeshellarg($package) . ' 2>&1');
     }
 
     public function remove($package)
     {
-        return ExecResult::createFromCommand('pkg remove -y ' . escapeshellarg($package));
+        return ExecResult::createFromCommand('pkg remove -y ' . escapeshellarg($package) . ' 2>&1');
     }
 
-    public function isInstalled()
+    public function isInstalled($package)
     {
-        exec('pkg info ' . escapeshellarg($package), $output, $returnCode);
+        exec('pkg info ' . escapeshellarg($package) . ' 2>&1', $output, $returnCode);
 
         return $returnCode === 0;
     }
