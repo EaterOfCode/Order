@@ -2,25 +2,11 @@
 
 include __DIR__ . '/../vendor/autoload.php';
 
-use Eater\Order\Law\Stream;
-use Eater\Order\Law\Loader;
-use Eater\Order\Law\Storage;
-use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Local;
-use Eater\Order\Util\PackageProvider\Wrapper;
+use Eater\Order\Runtime;
 
-Wrapper::load();
-Stream::register('law');
 
-Stream::setStorage(
-    new Storage(
-        new Filesystem(
-            new Local('/')
-        ),
-        ['']
-    )
-);
 
+$runtime = new Runtime();
 $collection = Loader::load($argv[1]);
 $errors = $collection->validate();
 if (!empty($errors)) {

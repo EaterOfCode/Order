@@ -2,19 +2,18 @@
 
 namespace Eater\Order\Law\Wrapped;
 
-use Eater\Order\Definition;
-use Eater\Order\Law\Loader;
+use Eater\Order\Runtime;
 
 function file($path, $options = []) {
     $def = new Definition\File($path, $options);
-    Loader::addDefinition($def);
+    Runtime::getCurrent()->addDefinition($def);
     return $def;
 }
 
 function package($package, $options = [])
 {
     $def = new Definition\Package($package, $options);
-    Loader::addDefinition($def);
+    Runtime::getCurrent()->addDefinition($def);
     return $def;
 }
 
