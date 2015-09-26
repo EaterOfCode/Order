@@ -5,6 +5,7 @@ namespace Eater\Order\Law;
 class Stream {
 
     private static $storage;
+    private static $logger;
 
     public static function getStorage()
     {
@@ -13,7 +14,12 @@ class Stream {
 
     public static function setStorage($storage)
     {
-        static::$storage = $storage;   
+        static::$storage = $storage;
+    }
+
+    public static function setLogger($logger)
+    {
+        static::$logger = $logger;
     }
 
     public static function register($name)
@@ -49,14 +55,17 @@ class Stream {
         $this->path = substr($path, strpos($path, '://') + 3);
         $storage = static::getStorage();
 
+        static::$logger->addDebug(sprintf('Reading file "%s" as law file', $this->path));
+
         // Law Stream can only be read
         if (!in_array($mode, ['r', 'rb', 'rt'])) {
+            static::$logger->addWarning(sprintf('Tried opening file "%s" as writable', $this->path));
             throw new InvalidMode($mode, $path);
         }
 
-        // do simple checking if this is reading only
         if (!$storage->hasLawFile($this->path)) {
-             return false;
+            static::$logger->addWarning(sprintf('Tried opening file "%s" while it doesn\'t exist', $this->path));
+            return false;
         }
 
         $this->law = $storage->getLaw($this->path);

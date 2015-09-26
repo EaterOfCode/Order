@@ -1,0 +1,19 @@
+order-dossier:
+  - \Eater\Order\Paper\Order
+  - \Eater\Order\Paper\Facter
+order-package-provider:
+  xbps:
+    os:
+      - void
+    class: \Eater\Order\Util\PackageProvider\Xbps
+  aptget:
+    os:
+      - ubuntu
+      - debian
+    class: \Eater\Order\Util\PackageProvider\Xbps
+  pkgng:
+    os:
+      - freebsd
+    class: \Eater\Order\Util\PackageProvider\Pkgng
+order-include:
+  - Law/Wrapped/functions.php

@@ -6,42 +6,50 @@ use \Eater\Order\Util\OsProbe;
 
 class Wrapper {
 
-    static private $repo   = [];
-    static private $packageProviderByName = [];
+    private $providers = [];
+    private $providerByOs = [];
+    private $logger;
+    private $os;
+    private $default;
 
-    static public function register($name, $wrapper, $osList)
+    public function __construct($logger, $providers, $os)
     {
-        static::$packageProviderByName[$name] = $wrapper;
+        $this->logger = $logger;
+        $this->os     = $os;
 
-        foreach ($osList as $os) {
-            static::$repo[$os] = $wrapper;
+        foreach ($providers as $providerName => $provider) {
+            if (class_exists($provider['class'])) {
+                $providerClass = new $provider['class'];
+
+                $this->providers[$providerName] = $providerClass;
+
+                foreach ($provider['os'] as $defOs) {
+                    $this->providerByOs[$defOs] = $providerClass;
+                }
+
+                $this->logger->addDebug(sprintf('Added package provider "%s"', $providerName), $provider);
+            } else {
+                $this->logger->addWarning(sprintf('Class "%s" doesn\'t exist for package provider "%s"', $provider['class'], $providerName));
+            }
+        }
+
+        if (isset($this->providerByOs[$os])) {
+            $this->default = $this->providerByOs[$os];
+            $name = array_search($this->default, $this->providers);
+
+            $this->logger->addDebug(sprintf('Selected "%s" as default package provider for this os: "%s"', $name, $os));
+        } else {
+
         }
     }
 
-    static public function getPackageProvider()
+    public function getByName($name)
     {
-        $os = OsProbe::probe();
-
-        if (!isset(static::$repo[$os])) {
-            throw new UnknownPackageProvider(null, $os);
-        }
-
-        return static::$repo[$os];
+        return $this->providers[$name];
     }
 
-    static public function getPackageProviderByName($name)
+    public function getDefault()
     {
-        if (!isset(static::$packageProviderByName[$name])) {
-            throw new UnknownPackageProvider($name, null);
-        }
-
-        return static::$packageProviderByName[$name];
-    }
-
-    static public function load()
-    {
-        static::register("xbps", new Xbps(), ["void"]);
-        static::register("apt-get", new AptGet(), ["ubuntu", "debian"]);
-        static::register("pkgng", new Pkgng(), ["freebsd"]);
+        return $this->default;
     }
 }

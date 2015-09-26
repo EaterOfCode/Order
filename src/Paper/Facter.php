@@ -2,7 +2,7 @@
 
 namespace Eater\Order\Paper;
 
-use Eater\Order\Util\ExecCommand;
+use Eater\Order\Util\ExecResult;
 
 class Facter implements Dossier {
 
@@ -10,8 +10,8 @@ class Facter implements Dossier {
 
     public function getFacterData()
     {
-        if ($this->facterData !== null) {
-            $facter = ExecCommand::getFromCommand("facter --json");
+        if ($this->facterData === null) {
+            $facter = ExecResult::createFromCommand("facter --json");
 
             if (!$facter->isSuccess()) {
                 throw new FacterFailed();
@@ -25,8 +25,7 @@ class Facter implements Dossier {
 
     public function get($name)
     {
-        $names = implode(".", $name);
-
+        $names = explode(".", $name);
         $current = $this->getFacterData();
 
         foreach ($names as $itemName) {
@@ -42,7 +41,7 @@ class Facter implements Dossier {
 
     public function has($name)
     {
-        $names = implode(".", $name);
+        $names = explode(".", $name);
 
         $current = $this->getFacterData();
 

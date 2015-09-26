@@ -4,6 +4,7 @@ namespace Eater\Order\State;
 
 use Eater\Order\Util\OsProbe;
 use Eater\Order\Util\PackageProvider\Wrapper;
+use Eater\Order\Runtime;
 
 class Package extends Desirable {
 
@@ -21,9 +22,9 @@ class Package extends Desirable {
         $this->state = $state;
 
         if ($provider === null) {
-            $this->provider = Wrapper::getPackageProvider();
+            $this->provider = Runtime::getCurrent()->getPackageProvider()->getDefault();
         } else {
-            $this->provider = Wrapper::getPackageProviderByName($provider);
+            $this->provider = Runtime::getCurrent()->getPackageProvider()->getByName($provider);
         }
     }
 

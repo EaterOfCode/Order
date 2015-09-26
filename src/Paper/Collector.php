@@ -1,10 +1,12 @@
 <?php
 
+namespace Eater\Order\Paper;
+
 class Collector {
 
     private $dossiers = [];
 
-    public addDossier($dossier)
+    public function addDossier($dossier)
     {
         $this->dossiers[] = $dossier;
     }
@@ -13,7 +15,7 @@ class Collector {
     {
         foreach ($this->dossiers as $dossier) {
             if ($dossier->has($name)) {
-                return $this->get($name);
+                return $dossier->get($name);
             }
         }
 

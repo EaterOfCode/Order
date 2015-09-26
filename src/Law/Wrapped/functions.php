@@ -3,6 +3,7 @@
 namespace Eater\Order\Law\Wrapped;
 
 use Eater\Order\Runtime;
+use Eater\Order\Definition;
 
 function file($path, $options = []) {
     $def = new Definition\File($path, $options);

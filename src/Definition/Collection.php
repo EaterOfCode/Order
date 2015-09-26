@@ -4,11 +4,17 @@ namespace Eater\Order\Definition;
 
 class Collection {
 
+    private $logger;
     private $definitions                     = [];
     private $definitionByIdentifier          = [];
     private $definitionByName                = [];
     private $requiresDefinitions             = [];
     private $actionChain                     = [];
+
+    public function __construct($logger)
+    {
+        $this->logger = $logger;
+    }
 
     public function add(Definition $definition)
     {
@@ -85,7 +91,6 @@ class Collection {
 
     private function getRecursiveRequired($def, $path = [])
     {
-
         $errors = $this->validateDefinition($def);
 
         if (!empty($errors)) {
@@ -100,6 +105,7 @@ class Collection {
             $id = $requiredDef->getIdentifier();
 
             if (in_array($id, $path)) {
+                $this->logger->addWarning(sprintf('Found circular require for the following definitions: %s', implode(", ", array_unique($path))));
                 $errors[] = new CircularRequire($id, $def, $path);
                 continue;
             }
@@ -110,6 +116,7 @@ class Collection {
                 $required = array_merge($required, $newRequired);
                 $errors   = array_merge($errors, $newErrors);
             } else {
+                $this->logger->addWarning(sprintf('Coudln\'t resolve "%s" required for "%s"', $id, $def->getIdentifier()));
                 $errors[] = new UnresolvedRequiredDefinition($id, $def);
             }
         }
@@ -131,6 +138,7 @@ class Collection {
     {
         return array_map(
             function($error) use ($def) {
+                $this->logger->addWarning(sprintf('Definition "%s" has a configuration error: %s', $def->getIdentifier(), $error));
                 return new InvalidConfiguration($error, $def);
             },
             $def->validate()

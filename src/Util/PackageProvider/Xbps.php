@@ -22,7 +22,7 @@ class Xbps {
 
     public function isInstalled($package)
     {
-        exec('xbps-query ' . escapeshellarg($package) . ' 2>1', $output, $returnCode);
+        exec('xbps-query ' . escapeshellarg($package) . ' 2>&1', $output, $returnCode);
         return $returnCode === 0;
     }
 }
