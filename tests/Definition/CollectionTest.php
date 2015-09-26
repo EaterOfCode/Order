@@ -2,9 +2,19 @@
 
 use Eater\Order\Definition\Collection;
 use Eater\Order\Definition\Dummy;
+use Monolog\Logger;
+use Monolog\Handler\NullHandler;
 
 class DefinitionTest extends PHPUnit_Framework_TestCase {
 
+    private $logger;
+
+    public function setUp()
+    {
+        $logger = new Logger("Order");
+        $logger->pushHandler(new NullHandler());
+        $this->logger = $logger;
+    }
 
     public function testCircularRequire()
     {
@@ -15,7 +25,7 @@ class DefinitionTest extends PHPUnit_Framework_TestCase {
         $def2->requires(clone $def);
         $def->requires(clone $def2);
 
-        $collection = new Collection();
+        $collection = new Collection($this->logger);
         $collection->add($def);
         $collection->add($def2);
 
@@ -34,7 +44,7 @@ class DefinitionTest extends PHPUnit_Framework_TestCase {
         $unresolved = new Dummy('unresolved');
         $def->requires($unresolved);
 
-        $collection = new Collection();
+        $collection = new Collection($this->logger);
         $collection->add($def);
         $collection->add($unresolved);
 
@@ -56,7 +66,7 @@ class DefinitionTest extends PHPUnit_Framework_TestCase {
         $def4->requires(clone $def2);
         $def4->requires(clone $def3);
 
-        $collection = new Collection();
+        $collection = new Collection($this->logger);
         $collection->add($def1);
         $collection->add($def2);
         $collection->add($def3);
@@ -88,7 +98,7 @@ class DefinitionTest extends PHPUnit_Framework_TestCase {
         $def2->requires(clone $def1);
         $def3->requires(clone $def2);
 
-        $collection = new Collection();
+        $collection = new Collection($this->logger);
         $collection->add($def1);
         $collection->add($def2);
         $collection->add($def3);
@@ -105,7 +115,7 @@ class DefinitionTest extends PHPUnit_Framework_TestCase {
 
         $def1->ignore();
 
-        $collection = new Collection();
+        $collection = new Collection($this->logger);
         $collection->add($def1);
 
         $errors = $collection->validate();

@@ -4,6 +4,8 @@ use Eater\Order\Law\Stream;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Memory\MemoryAdapter;
 use Eater\Order\Law\Storage;
+use Monolog\Logger;
+use Monolog\Handler\NullHandler;
 
 class StreamTest extends PHPUnit_Framework_TestCase {
 
@@ -16,6 +18,9 @@ class StreamTest extends PHPUnit_Framework_TestCase {
         $this->flySystem->write('law', '<?php file("test");');
         $this->flySystem->write('henk/is-there/another', '<? file("somewhere");');
 
+        $logger = new Logger("Order");
+        $logger->pushHandler(new NullHandler());
+        Stream::setLogger($logger);
         Stream::setStorage($this->createStorage());
     }
 
