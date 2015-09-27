@@ -10,6 +10,8 @@ class Package extends Definition {
     protected $name;
     protected $install = true;
     protected $provider = null;
+    protected $type = 'package';
+    protected $special = [];
 
     public function __construct($package, $options = [])
     {
@@ -30,6 +32,7 @@ class Package extends Definition {
             $this->provider = $options['provider'];
         }
 
+        $this->special = array_diff($options, ["provider" => null, "install" => null, "remove" => null, "name" => null]);
         $this->setIdentifier($this->name);
     }
 
@@ -56,7 +59,7 @@ class Package extends Definition {
 
     public function getDesirableState()
     {
-        return PackageState::create($this->package, $this->install, $this->provider);
+        return PackageState::create($this->package, $this->install, $this->provider, $this->special);
     }
 
     public function validate()

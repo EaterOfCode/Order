@@ -12,7 +12,15 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "arkadi/freebsd-10.1-amd64"
+
+  # FreeBSD
+  # config.vm.box = "arkadi/freebsd-10.1-amd64"
+
+  # Ubuntu
+  # config.vm.box = "ubuntu/trusty64"
+
+  # Gentoo
+  config.vm.box = "cmiles/gentoo-amd64-minimal"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -65,8 +73,8 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-     sudo pkg update
-     sudo pkg install -y php56 git
+     sudo apt-get update
+     sudo apt-get install -y php5-cli git
      curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
      cd /vagrant/;
      composer install;

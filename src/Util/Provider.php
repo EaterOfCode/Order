@@ -1,10 +1,8 @@
 <?php
 
-namespace Eater\Order\Util\PackageProvider;
+namespace Eater\Order\Util;
 
-use \Eater\Order\Util\OsProbe;
-
-class Wrapper {
+class Provider {
 
     private $providers = [];
     private $providerByOs = [];
@@ -12,7 +10,7 @@ class Wrapper {
     private $os;
     private $default;
 
-    public function __construct($logger, $providers, $os)
+    public function __construct($logger, $providers, $os, $what)
     {
         $this->logger = $logger;
         $this->os     = $os;
@@ -27,9 +25,9 @@ class Wrapper {
                     $this->providerByOs[$defOs] = $providerClass;
                 }
 
-                $this->logger->addDebug(sprintf('Added package provider "%s"', $providerName), $provider);
+                $this->logger->addDebug(sprintf('Added %s provider "%s"', $what, $providerName), $provider);
             } else {
-                $this->logger->addWarning(sprintf('Class "%s" doesn\'t exist for package provider "%s"', $provider['class'], $providerName));
+                $this->logger->addWarning(sprintf('Class "%s" doesn\'t exist for %s provider "%s"', $provider['class'], $what, $providerName));
             }
         }
 
@@ -37,9 +35,9 @@ class Wrapper {
             $this->default = $this->providerByOs[$os];
             $name = array_search($this->default, $this->providers);
 
-            $this->logger->addDebug(sprintf('Selected "%s" as default package provider for this os: "%s"', $name, $os));
+            $this->logger->addDebug(sprintf('Selected "%s" as default %s provider for this os: "%s"', $name, $what, $os));
         } else {
-
+            $this->logger->addAlert(sprintf('No default %s provider for this os: "%s"', $what, $os));
         }
     }
 

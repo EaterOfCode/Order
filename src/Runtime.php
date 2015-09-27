@@ -7,7 +7,7 @@ use Eater\Order\Law\Stream;
 use Eater\Order\Law\Storage;
 use Eater\Order\Config\Combined;
 use Eater\Order\Paper\Collector;
-use Eater\Order\Util\PackageProvider\Wrapper;
+use Eater\Order\Util\Provider;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
 use Monolog\Logger;
@@ -26,7 +26,8 @@ class Runtime {
     private $config;
     private $orderConfig;
     private $collection;
-    private $packageWrapper;
+    private $packageProvider;
+    private $serviceProvider;
     private $workingDirectory;
     private $dossier;
 
@@ -34,18 +35,23 @@ class Runtime {
     {
         static::$current = $this;
 
-        $this->collection = new Collection($this->logger);
-        $this->dossier = new Collector();
-
         $this->logger = new Logger('Order');
         $handler = new StreamHandler('php://stdout', Logger::DEBUG);
         $handler->setFormatter(new ColoredLineFormatter(null, "[%level_name%] %message% %context% %extra%\n"));
         $this->logger->pushHandler($handler);
+
+        $this->collection = new Collection($this->logger);
+        $this->dossier = new Collector();
+
         $this->logger->addDebug('Runtime constructed');
     }
 
     public function init($workingDirectory)
     {
+        if (\posix_getuid() !== 0) {
+            $this->logger->addError('Order not running as root, some functionality may fail to work.');
+        }
+
         $this->workingDirectory = $workingDirectory;
 
         $this->orderConfig = new Combined($this->logger, [__DIR__ . '/../config/order', $workingDirectory . '/order']);
@@ -57,8 +63,12 @@ class Runtime {
         }
 
         $packageProviders = array_merge($this->orderConfig->get('order-package-provider'), $this->orderConfig->get('package-provider') ? $this->orderConfig->get('package-provider') : []);
+        $serviceProviders = array_merge($this->orderConfig->get('order-service-provider'), $this->orderConfig->get('service-provider') ? $this->orderConfig->get('service-provider') : []);
 
-        $this->packageWrapper = new Wrapper($this->logger, $packageProviders, $this->dossier->get('os.distribution'));
+        $os = $this->dossier->get('os.distribution');
+
+        $this->packageProvider = new Provider($this->logger, $packageProviders, $os, 'package');
+        $this->serviceProvider = new Provider($this->logger, $serviceProviders, $os, 'service');
 
         foreach ($this->orderConfig->get('order-include') as $include) {
             include_once $include;
@@ -119,17 +129,30 @@ class Runtime {
                     echo $diff->getPretty();
                 }
 
+                if ($state->failed()) {
+                    $this->logger->addWarning(sprintf('Couldn\'t apply state "%s": %s', $definition->getIdentifier(), $state->getReason()), $state->getReasonExtra());
+                }
+
                 if ($commit) {
                     $state->apply();
+
+                    if ($state->failed()) {
+                        $this->logger->addWarning(sprintf('Couldn\'t apply state "%s": %s', $definition->getIdentifier(), $state->getReason()), $state->getReasonExtra());
+                    }
                 }
             } else {
-                echo "Couldn't apply state: " . $definition->getIdentifier() . " because of failed dependecies\n";
+                $this->logger->addWarning("Couldn't apply state: " . $definition->getIdentifier() . " because of failed dependecies");
             }
         }
     }
 
     public function getPackageProvider()
     {
-        return $this->packageWrapper;
+        return $this->packageProvider;
+    }
+
+    public function getServiceProvider()
+    {
+        return $this->serviceProvider;
     }
 }

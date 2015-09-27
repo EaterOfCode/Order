@@ -12,14 +12,16 @@ class Package extends Desirable {
     protected $package;
     protected $state;
     protected $currentState;
+    protected $special;
 
     const INSTALLED = 0;
     const REMOVED = 1;
 
-    public function __construct($package, $state, $provider)
+    public function __construct($package, $state, $provider, $special)
     {
         $this->package = $package;
         $this->state = $state;
+        $this->special = $special;
 
         if ($provider === null) {
             $this->provider = Runtime::getCurrent()->getPackageProvider()->getDefault();
@@ -50,10 +52,10 @@ class Package extends Desirable {
             switch ($this->state)
             {
                 case Package::INSTALLED:
-                    $result = $this->provider->install($this->package);
+                    $result = $this->provider->install($this->package, $this->special);
                     break;
                 case Package::REMOVED:
-                    $result = $this->provider->remove($this->package);
+                    $result = $this->provider->remove($this->package, $this->special);
                     break;
             };
 
@@ -69,14 +71,14 @@ class Package extends Desirable {
     private function getCurrentState()
     {
         if ($this->currentState === null) {
-            $this->currentState = $this->provider->isInstalled($this->package) ? Package::INSTALLED : Package::REMOVED;
+            $this->currentState = $this->provider->isInstalled($this->package, $this->special) ? Package::INSTALLED : Package::REMOVED;
         }
 
         return $this->currentState;
     }
 
-    public static function create($package, $install, $provider)
+    public static function create($package, $install, $provider, $special)
     {
-        return new Package($package, $install ? Package::INSTALLED : Package::REMOVED, $provider);
+        return new Package($package, $install ? Package::INSTALLED : Package::REMOVED, $provider, $special);
     }
 }

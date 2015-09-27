@@ -4,8 +4,10 @@ namespace Eater\Order\State;
 
 abstract class Desirable {
 
-    private $requires = [];
-    private $fail     = false;
+    private $requires    = [];
+    private $fail        = false;
+    private $reason      = "";
+    private $reasonExtra = [];
 
     public function setRequires($requires)
     {
@@ -25,14 +27,26 @@ abstract class Desirable {
         return true;
     }
 
-    public function fail()
+    public function fail($reason = "No reason given", $reasonExtra = [])
     {
-        $this->fail = true;
+        $this->fail         = true;
+        $this->reason       = $reason;
+        $this->reasonExtra  = $reasonExtra;
     }
 
     public function failed()
     {
         return $this->fail;
+    }
+
+    public function getReason()
+    {
+        return $this->reason;
+    }
+
+    public function getReasonExtra()
+    {
+        return $this->reasonExtra;
     }
 
     public function isCurrentState() {
@@ -44,4 +58,13 @@ abstract class Desirable {
         throw new \RuntimeException("Not implemented");
     }
 
+    public function handleExecResult($result)
+    {
+        if (!$result->isSuccess()) {
+            $this->fail(sprintf('executing "%s" failed (%d)', $result->getCommand(), $result->getReturnCode()), $result->getOutput());
+            return false;
+        }
+
+        return true;
+    }
 }

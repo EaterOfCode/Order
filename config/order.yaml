@@ -10,10 +10,32 @@ order-package-provider:
     os:
       - ubuntu
       - debian
-    class: \Eater\Order\Util\PackageProvider\Xbps
+    class: \Eater\Order\Util\PackageProvider\AptGet
   pkgng:
     os:
       - freebsd
     class: \Eater\Order\Util\PackageProvider\Pkgng
+  emerge:
+    os:
+      - gentoo
+    class: \Eater\Order\Util\PackageProvider\Emerge
+order-service-provider:
+  runit:
+    os:
+      - void
+    class: \Eater\Order\Util\ServiceProvider\Runit
+  openrc:
+    os:
+      - gentoo
+    class: \Eater\Order\Util\ServiceProvider\OpenRC
+#  debian:
+#    os:
+#      - debian
+#      - ubuntu
+#    class: \Eater\Order\Util\ServiceProvider\Debian
+#  freebsd:
+#    os:
+#      - freebsd
+#    class: \Eater\Order\Util\ServiceProvider\FreeBSD
 order-include:
   - Law/Wrapped/functions.php
