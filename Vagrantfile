@@ -17,10 +17,10 @@ Vagrant.configure(2) do |config|
   # config.vm.box = "arkadi/freebsd-10.1-amd64"
 
   # Ubuntu
-  # config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/trusty64"
 
   # Gentoo
-  config.vm.box = "cmiles/gentoo-amd64-minimal"
+  # config.vm.box = "cmiles/gentoo-amd64-minimal"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
