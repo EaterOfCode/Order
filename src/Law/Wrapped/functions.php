@@ -25,6 +25,13 @@ function service($service, $options = [])
     return $def;
 }
 
+function fileline($file, $options = [])
+{
+    $def = new Definition\FileLine($file, $options);
+    Runtime::getCurrent()->addDefinition($def);
+    return $def;
+}
+
 function which($which, $choices, $default = null)
 {
     $result;
