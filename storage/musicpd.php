@@ -1,9 +1,9 @@
 <?php
 
-package('mpd', [
+package('musicpd', [
     "emerge/use" => "vorbis"
 ])->install();
 
-service('mpd')
+service('musicpd')
     ->enable()
-    ->requires(package('mpd'));
+    ->requires(package('musicpd'));

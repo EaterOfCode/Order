@@ -57,8 +57,12 @@ class FileLine extends Desirable {
                     switch ($this->where) {
                         case 'on':
                         case null:
-                            $file[$i] = $this->line;
-                            var_dump($file);
+                            if ($this->line === false) {
+                                array_splice($file, $i , 1, []);
+                                $i--;
+                            } else {
+                                $file[$i] = $this->line;
+                            }
                             break;
                         case 'after':
                             if ($file[$i + 1] !== $line) {

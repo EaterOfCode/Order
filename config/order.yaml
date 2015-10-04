@@ -33,9 +33,9 @@ order-service-provider:
       - debian
       - ubuntu
     class: \Eater\Order\Util\ServiceProvider\Debian
-#  freebsd:
-#    os:
-#      - freebsd
-#    class: \Eater\Order\Util\ServiceProvider\FreeBSD
+  freebsd:
+    os:
+      - freebsd
+    class: \Eater\Order\Util\ServiceProvider\FreeBSD
 order-include:
   - Law/Wrapped/functions.php

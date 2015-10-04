@@ -155,4 +155,9 @@ class Runtime {
     {
         return $this->serviceProvider;
     }
+
+    public function getDossier()
+    {
+        return $this->dossier;
+    }
 }

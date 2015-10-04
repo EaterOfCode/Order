@@ -14,10 +14,10 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
 
   # FreeBSD
-  # config.vm.box = "arkadi/freebsd-10.1-amd64"
+  config.vm.box = "arkadi/freebsd-10.1-amd64"
 
   # Ubuntu
-  config.vm.box = "ubuntu/trusty64"
+  # config.vm.box = "ubuntu/trusty64"
 
   # Gentoo
   # config.vm.box = "cmiles/gentoo-amd64-minimal"
@@ -73,12 +73,5 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-     sudo apt-get update
-     sudo apt-get install -y php5-cli git
-     curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
-     cd /vagrant/;
-     composer install;
-     php bin/test.php storage/create.law.php;
-     sl;
   SHELL
 end

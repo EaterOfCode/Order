@@ -60,7 +60,7 @@ abstract class Desirable {
 
     public function handleExecResult($result)
     {
-        if (!$result->isSuccess()) {
+        if ($result !== null && !$result->isSuccess()) {
             $this->fail(sprintf('executing "%s" failed (%d)', $result->getCommand(), $result->getReturnCode()), $result->getOutput());
             return false;
         }

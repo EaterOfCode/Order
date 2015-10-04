@@ -34,9 +34,9 @@ function fileline($file, $options = [])
 
 function which($which, $choices, $default = null)
 {
-    $result;
+    $result = null;
     foreach ($choices as $selector => $choice) {
-        if ($choice instanceof Definition/Definition) {
+        if ($choice instanceof Definition\Definition) {
             $choice->ignore();
         }
 
@@ -49,7 +49,7 @@ function which($which, $choices, $default = null)
         }
     }
 
-    if ($result instanceof Definition/Definition) {
+    if ($result instanceof Definition\Definition) {
         $choice->notice();
     }
 
@@ -62,4 +62,11 @@ function which($which, $choices, $default = null)
     }
 
     return $result;
+}
+
+function paper($name)
+{
+    return Runtime::getCurrent()
+        ->getDossier()
+        ->get($name);
 }

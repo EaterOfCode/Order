@@ -24,7 +24,7 @@ class FileLine extends Definition {
 
         if (isset($options['match'])) {
             $this->match = $options['match'];
-        } else {
+        } elseif ($this->line !== false) {
             $this->match = $this->line;
         }
 
@@ -51,6 +51,15 @@ class FileLine extends Definition {
         if ($this->match === null) {
             $this->match = $line;
         }
+
+        $this->fixIdentifier();
+
+        return $this;
+    }
+
+    public function remove()
+    {
+        $this->line = false;
 
         $this->fixIdentifier();
 
@@ -115,6 +124,10 @@ class FileLine extends Definition {
 
         if (!in_array($this->where, ['on', 'after', 'before'])) {
             $errors[] = 'where can only be "on", "after" or "before", current value: "' . $this->where . '"';
+        }
+
+        if ($this->line === false && $this->match === null) {
+            $errors[] = "Can't remove line, with no match set";
         }
 
         return $errors;
