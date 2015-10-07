@@ -37,5 +37,10 @@ order-service-provider:
     os:
       - freebsd
     class: \Eater\Order\Util\ServiceProvider\FreeBSD
+order-user-provider:
+  pw:
+    os:
+      - freebsd
+    class: \Eater\Order\Util\UserProvider\Pw
 order-include:
   - Law/Wrapped/functions.php

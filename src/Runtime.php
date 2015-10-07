@@ -28,6 +28,7 @@ class Runtime {
     private $collection;
     private $packageProvider;
     private $serviceProvider;
+    private $userProvider;
     private $workingDirectory;
     private $dossier;
 
@@ -64,11 +65,13 @@ class Runtime {
 
         $packageProviders = array_merge($this->orderConfig->get('order-package-provider'), $this->orderConfig->get('package-provider') ? $this->orderConfig->get('package-provider') : []);
         $serviceProviders = array_merge($this->orderConfig->get('order-service-provider'), $this->orderConfig->get('service-provider') ? $this->orderConfig->get('service-provider') : []);
+        $userProviders    = array_merge($this->orderConfig->get('order-user-provider'), $this->orderConfig->get('user-provider') ? $this->orderConfig->get('user-provider') : []);
 
         $os = $this->dossier->get('os.distribution');
 
         $this->packageProvider = new Provider($this->logger, $packageProviders, $os, 'package');
         $this->serviceProvider = new Provider($this->logger, $serviceProviders, $os, 'service');
+        $this->serviceProvider = new Provider($this->logger, $userProviders, $os, 'user');
 
         foreach ($this->orderConfig->get('order-include') as $include) {
             include_once $include;
@@ -154,6 +157,11 @@ class Runtime {
     public function getServiceProvider()
     {
         return $this->serviceProvider;
+    }
+
+    public function getUserProvider()
+    {
+        return $this->userProvider;
     }
 
     public function getDossier()

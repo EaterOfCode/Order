@@ -55,7 +55,6 @@ class User extends Definition {
     public function create()
     {
         $this->shouldExist = true;
-
         return $this;
     }
 
