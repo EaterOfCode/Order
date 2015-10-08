@@ -43,8 +43,8 @@ class Order implements Dossier {
             return strtolower($os);
         }
 
-        $id = exec("cat /etc/*-release | grep '^ID='");
+        $id = exec("cat /etc/*-release | grep '^\(DISTRIB_\)\?ID='");
 
-        return strtolower(trim(substr($id, 3), '"'));
+        return strtolower(trim(substr($id, strpos($id, "=") + 1), '"'));
     }
 }

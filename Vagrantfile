@@ -14,10 +14,13 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
 
   # FreeBSD
-  config.vm.box = "arkadi/freebsd-10.1-amd64"
+  # config.vm.box = "arkadi/freebsd-10.1-amd64"
 
-  # Ubuntu
+  # Ubuntu Trusty
   # config.vm.box = "ubuntu/trusty64"
+
+  # Ubuntu Precise
+  config.vm.box = "hashicorp/precise64"
 
   # Gentoo
   # config.vm.box = "cmiles/gentoo-amd64-minimal"
