@@ -42,7 +42,8 @@ class Pw extends Posix {
             $cmd .= ' -c ' . escapeshellarg($comment);
         }
 
-        if (!empty(array_diff($current['groups'], $groups))) {
+        $diff = array_diff($current['groups'], $groups);
+        if (!empty(array_diff($diff))) {
             $cmd .= ' -G ' . escapeshellarg(implode(',', $groups));
         }
 
