@@ -6,4 +6,7 @@ php:
     - hhvm
     - nightly
 install:
-      - travis_retry composer update
+    - travis_retry composer update
+after_install:
+    - php bin/test.php storage/nginx.law.php commit
+    - curl http://localhost/
