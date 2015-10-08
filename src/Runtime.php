@@ -71,7 +71,7 @@ class Runtime {
 
         $this->packageProvider = new Provider($this->logger, $packageProviders, $os, 'package');
         $this->serviceProvider = new Provider($this->logger, $serviceProviders, $os, 'service');
-        $this->serviceProvider = new Provider($this->logger, $userProviders, $os, 'user');
+        $this->userProvider = new Provider($this->logger, $userProviders, $os, 'user');
 
         foreach ($this->orderConfig->get('order-include') as $include) {
             include_once $include;

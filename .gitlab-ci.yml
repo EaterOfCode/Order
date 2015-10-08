@@ -1,0 +1,8 @@
+test:ubuntu-trusty:
+  image: nitemv/ubuntu-trusty
+  script:
+    - apt-get install -y php-cli
+    - curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/bin
+    - composer install
+    - php bin/test.php storage/nginx.law.php commit
+    - curl http://localhost/
