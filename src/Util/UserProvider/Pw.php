@@ -43,7 +43,7 @@ class Pw extends Posix {
         }
 
         $diff = array_diff($current['groups'], $groups);
-        if (!empty(array_diff($diff))) {
+        if (!empty($diff)) {
             $cmd .= ' -G ' . escapeshellarg(implode(',', $groups));
         }
 
