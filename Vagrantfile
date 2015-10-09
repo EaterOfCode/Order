@@ -17,10 +17,10 @@ Vagrant.configure(2) do |config|
   # config.vm.box = "arkadi/freebsd-10.1-amd64"
 
   # Ubuntu Trusty
-  # config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/trusty64"
 
   # Ubuntu Precise
-  config.vm.box = "hashicorp/precise64"
+  # config.vm.box = "hashicorp/precise64"
 
   # Gentoo
   # config.vm.box = "cmiles/gentoo-amd64-minimal"
@@ -76,5 +76,11 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt-get install -y php5-cli curl facter
+    cd /vagrant
+    php bin/test.php storage/nginx.law.php commit
+    sleep 5; # allow nginx to settle down
+    diff <(curl -Ss http://localhost/) <(echo -n "success:order")
   SHELL
 end
