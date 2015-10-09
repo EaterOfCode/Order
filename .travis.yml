@@ -9,6 +9,7 @@ php:
 install:
     - travis_retry composer update
 script:
-    - sudo php bin/test.php storage/nginx.law.php commit
+    - sudo php -d date.timezone=UTC -d open_basedir="/" bin/test.php -- storage/nginx.law.php commit
     - curl http://localhost/
     - phpunit
+    - ls ./**/* # try to find out why travis is dying :(
