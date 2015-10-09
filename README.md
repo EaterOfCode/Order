@@ -1,4 +1,8 @@
-# Order [![Build Status](https://img.shields.io/travis/EaterOfCode/Order.svg?style=flat-square)](https://travis-ci.org/EaterOfCode/Order)
+# Order
+
+Travis (Unit tests): [![Build Status](https://img.shields.io/travis/EaterOfCode/Order.svg?style=flat-square)](https://travis-ci.org/EaterOfCode/Order)
+Gitlab CI (Integration tests): [![Build Status](https://c.darenet.org/ci/projects/4/status.png?ref=master)](https://c.darenet.org/ci/projects/4?ref=master)
+
 Automated System Management in PHP (because why not?)
 
 Order is a system management tool, designed to make it easier for you to manage and provision your servers. ehh... who am I kidding. Order is an attempt to rewrite puppet in php, with totally no knowledge about how puppet works on the inside.
@@ -35,7 +39,7 @@ $php = which(
       "php"
     ]
   );
- 
+
 package($php)->install();
 
 // inclusion is done by prefixing a file with `law://`

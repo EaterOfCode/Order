@@ -1,5 +1,4 @@
 language: php
-sudo: required
 php:
     - 5.4
     - 5.5
@@ -8,8 +7,3 @@ php:
     - nightly
 install:
     - travis_retry composer update
-script:
-    - sudo php -d date.timezone=UTC -d open_basedir="/" bin/test.php -- storage/nginx.law.php commit
-    - curl http://localhost/
-    - phpunit
-    - ls ./**/* # try to find out why travis is dying :(
