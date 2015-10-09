@@ -112,6 +112,8 @@ class Runtime {
             return false;
         }
 
+        $returnValue = true;
+
         $actionChain = $this->collection->getActionChain();
 
         $stateByIdentifier = [];
@@ -124,16 +126,19 @@ class Runtime {
                 $requires[] = $stateByIdentifier[$require->getIdentifier()];
             }
 
+
             $state->setRequires($requires);
 
             if ($state->areRequiresSatisfied()) {
-                foreach($state->getDiff() as $diff)
+                $diff = $state->getDiff();
+                foreach($diff as $partialDiff)
                 {
-                    echo $diff->getPretty();
+                    echo $partialDiff->getPretty();
                 }
 
                 if ($state->failed()) {
                     $this->logger->addWarning(sprintf('Couldn\'t apply state "%s": %s', $definition->getIdentifier(), $state->getReason()), $state->getReasonExtra());
+                    $returnValue = false;
                 }
 
                 if ($commit) {
@@ -141,12 +146,27 @@ class Runtime {
 
                     if ($state->failed()) {
                         $this->logger->addWarning(sprintf('Couldn\'t apply state "%s": %s', $definition->getIdentifier(), $state->getReason()), $state->getReasonExtra());
+                        $returnValue = false;
+                    }
+                }
+
+                if (!empty($diff)) {
+                    foreach ($definition->getToNotify() as $notifyReceiver) {
+                        $notify = $stateByIdentifier[$notifyReceiver->getIdentifier()];
+                        echo 'Notifying "' . $notifyReceiver->getIdentifier() . '"' . "\n";
+
+                        if ($commit) {
+                            $notify->notify();
+                        }
                     }
                 }
             } else {
                 $this->logger->addWarning("Couldn't apply state: " . $definition->getIdentifier() . " because of failed dependecies");
             }
+
         }
+
+        return $returnValue;
     }
 
     public function getPackageProvider()

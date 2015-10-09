@@ -97,4 +97,9 @@ class Service extends Desirable {
             }
         }
     }
+
+    public function notify()
+    {
+        $this->provider->reload($this->service);
+    }
 }

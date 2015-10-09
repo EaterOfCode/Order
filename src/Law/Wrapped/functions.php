@@ -11,6 +11,12 @@ function file($path, $options = []) {
     return $def;
 }
 
+function dir($path, $options = []) {
+    $def = new Definition\Directory($path, $options);
+    Runtime::getCurrent()->addDefinition($def);
+    return $def;
+}
+
 function package($package, $options = [])
 {
     $def = new Definition\Package($package, $options);

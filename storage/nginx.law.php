@@ -14,10 +14,15 @@ $nginxConfig = which(paper('os.distrobution'), ["freebsd" => '/usr/local/etc/ngi
 
 file($nginxConfig)
     ->contents(file_get_contents(__DIR__ . '/nginx/nginx.conf'))
-    ->requires(package($package));
+    ->requires(service($package))
+    ->notify(service($package));
+
+dir($wwwFolder)
+    ->recursive();
 
 file($wwwFolder . 'index.html')
-    ->contents('Hello world! <3 Order')
+    ->contents('success:order')
     ->requires(package($package))
+    ->requires(dir($wwwFolder))
     ->requires(file($nginxConfig));
 

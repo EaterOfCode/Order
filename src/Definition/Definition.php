@@ -3,16 +3,24 @@
 namespace Eater\Order\Definition;
 
 abstract class Definition {
-    protected $require            = [];
+    protected $require             = [];
     protected $type                = 'dummy';
     protected $identifier          = "";
     protected $isRequire           = false;
     protected $isIgnored           = false;
+    protected $toNotify            = [];
 
     public function requires(Definition $defintion)
     {
         $defintion->isRequire = true;
         $this->require[] = $defintion;
+        return $this;
+    }
+
+    public function notify(Definition $toNotify)
+    {
+        $toNotify->ignore();
+        $this->toNotify[] = $toNotify;
         return $this;
     }
 
@@ -58,5 +66,10 @@ abstract class Definition {
     public function getIgnored()
     {
         return $this->isIgnored;
+    }
+
+    public function getToNotify()
+    {
+        return $this->toNotify;
     }
 }

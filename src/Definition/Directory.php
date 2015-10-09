@@ -2,29 +2,22 @@
 
 namespace Eater\Order\Definition;
 
-use Eater\Order\State\File as StateFile;
+use Eater\Order\State\Directory as StateDirectory;
 
-class File extends Definition {
+class Directory extends Definition {
 
     protected $file;
-    protected $contents;
     protected $type = 'file';
-    protected $source;
     protected $shouldExist = true;
     protected $permissions;
     protected $user;
     protected $group;
+    protected $recursive = false;
 
     public function __construct($file, $options = [])
     {
         $this->file = $file;
         $this->setIdentifier($file);
-
-        if (isset($options['contents'])) {
-            $this->contents = "".$options['contents'];
-        } else if (isset($options['source'])) {
-            $this->source = $options['source'];
-        }
 
         if (isset($options['user'])) {
             $this->user = $options['user'];
@@ -41,21 +34,10 @@ class File extends Definition {
         if (isset($options['group'])) {
             $this->group = $options['group'];
         }
-    }
 
-    public function contents($contents)
-    {
-        $this->contents = "".$contents;
-        $this->source = null;
-        return $this;
-    }
-
-    public function source($source)
-    {
-        $this->source = $source;
-        $this->contents = null;
-
-        return $this;
+        if (isset($options['recursive'])) {
+            $this->recursive = $options['recursive'];
+        }
     }
 
     public function exist($should)
@@ -110,6 +92,11 @@ class File extends Definition {
         return $this;
     }
 
+    public function recursive($recursive = true)
+    {
+        $this->recursive = $recursive;
+    }
+
     public function validate()
     {
         return [];
@@ -117,20 +104,6 @@ class File extends Definition {
 
     public function getDesirableState()
     {
-        $optionArr = [
-            "file"        => $this->file,
-            "group"       => $this->group,
-            "user"        => $this->user,
-            "shouldExist" => $this->shouldExist,
-            "permissions" => $this->permissions
-        ];
-
-        if ($this->contents !== null) {
-            $optionArr['contents'] = $this->contents;
-        } else if ($this->source !== null) {
-            $optionArr['source'] = $this->source;
-        }
-
-        return StateFile::createFromArray($optionArr);
+        return new StateDirectory($this->file, $this->shouldExist, $this->permissions, $this->user, $this->group, $this->recursive);
     }
 }
