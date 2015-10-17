@@ -16,10 +16,13 @@ if (!in_array(paper('os.distribution'), ['void'])) {
 $wwwFolder = '/var/local/www/';
 $nginxConfig = which(paper('os.distribution'), ["freebsd" => '/usr/local/etc/nginx/nginx.conf', '/etc/nginx/nginx.conf']);
 
-file($nginxConfig)
+$nginxConfigDef = file($nginxConfig)
     ->contents(file_get_contents(__DIR__ . '/nginx/nginx.conf'))
-    ->requires(package($package))
-    ->notify(service($package));
+    ->requires(package($package));
+
+if (!in_array(paper('os.distribution'), ['void'])) {
+    $nginxConfigDef->notify(service($package));
+}
 
 dir($wwwFolder)
     ->recursive();
