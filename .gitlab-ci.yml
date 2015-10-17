@@ -14,5 +14,6 @@ test:void:
     - curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/bin
     - composer install
     - php bin/test.php storage/nginx.law.php commit
+    - nginx
     - sleep 5 # allow nginx to settle down
     - diff <(curl -Ss http://localhost/) <(echo -n "success:order")
