@@ -8,7 +8,7 @@ test:ubuntu-trusty:
     - sleep 5 # allow nginx to settle down
     - diff <(curl -Ss http://localhost/) <(echo -n "success:order")
 test:void:
-  image: eater/void-php
+  image: eater/void-order
   script:
     - curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/bin
     - composer install
