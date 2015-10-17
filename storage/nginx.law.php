@@ -6,14 +6,15 @@ package($package)
     ->install();
 
 
-if (!in_array(paper('os.distrobution'), ['void'])) {
+if (!in_array(paper('os.distribution'), ['void'])) {
+    var_dump(paper('os.distribution'));
     service($package)
         ->enable()
         ->requires(package($package));
 }
 
 $wwwFolder = '/var/local/www/';
-$nginxConfig = which(paper('os.distrobution'), ["freebsd" => '/usr/local/etc/nginx/nginx.conf', '/etc/nginx/nginx.conf']);
+$nginxConfig = which(paper('os.distribution'), ["freebsd" => '/usr/local/etc/nginx/nginx.conf', '/etc/nginx/nginx.conf']);
 
 file($nginxConfig)
     ->contents(file_get_contents(__DIR__ . '/nginx/nginx.conf'))
