@@ -12,16 +12,12 @@ class User extends Definition {
     protected $password = "";
     protected $shell;
     protected $home;
+    protected $comment;
     protected $type = 'user';
 
     public function __construct($name, $options = [])
     {
-        $this->package = $package;
-        $this->name    = $package;
-
-        if (isset($options['name'])) {
-            $this->name = $options['name'];
-        }
+        $this->name = $name;
 
         if (isset($options['create'])) {
             $this->shouldExist = $options['create'];
@@ -47,6 +43,10 @@ class User extends Definition {
 
         if (isset($options['password'])) {
             $this->password = $options['password'];
+        }
+
+        if (isset($options['comment'])) {
+            $this->comment = $options['comment'];
         }
 
         $this->setIdentifier($this->name);
@@ -94,6 +94,12 @@ class User extends Definition {
         return $this;
     }
 
+    public function comment($comment)
+    {
+        $this->comment = $comment;
+        return $this;
+    }
+
     public function provider($provider)
     {
         $this->provider = $provider;
@@ -102,7 +108,7 @@ class User extends Definition {
 
     public function getDesirableState()
     {
-        return new UserState($this->name, $this->shouldExist, $this->password, $this->groups, $this->shell, $this->home, $this->provider);
+        return new UserState($this->name, $this->shouldExist, $this->password, $this->groups, $this->shell, $this->home, $this->comment, $this->provider);
     }
 
     public function validate()

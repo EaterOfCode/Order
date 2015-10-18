@@ -24,6 +24,13 @@ function package($package, $options = [])
     return $def;
 }
 
+function user($name, $options = [])
+{
+    $def = new Definition\User($name, $options);
+    Runtime::getCurrent()->addDefinition($def);
+    return $def;
+}
+
 function service($service, $options = [])
 {
     $def = new Definition\Service($service, $options);

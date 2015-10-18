@@ -14,10 +14,10 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
 
   # FreeBSD
-  # config.vm.box = "arkadi/freebsd-10.1-amd64"
+  config.vm.box = "arkadi/freebsd-10.1-amd64"
 
   # Ubuntu Trusty
-  config.vm.box = "ubuntu/trusty64"
+  # config.vm.box = "ubuntu/trusty64"
 
   # Ubuntu Precise
   # config.vm.box = "hashicorp/precise64"
@@ -76,8 +76,8 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-    apt-get update
-    apt-get install -y php5-cli curl facter
+    pkg update pkg
+    pkg install -y php56 php56-extensions curl facter
     cd /vagrant
     php bin/test.php storage/nginx.law.php commit
     sleep 5; # allow nginx to settle down
