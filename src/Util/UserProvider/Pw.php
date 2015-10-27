@@ -7,11 +7,13 @@ use Eater\Order\Util\ExecResult;
 class Pw extends Posix {
     public function create($name, $password, $groups, $shell, $home, $comment)
     {
-        $cmd = 'pw useradd ' . escapeshellarg($name);
+        $cmd = 'pw useradd ' . escapeshellarg($name) . ' -m ';
 
-        $cmd = 'echo ' . escapeshellarg($password) . ' | ' . $cmd . ' -H 0';
+        if ($password !== null) {
+            $cmd = 'echo ' . escapeshellarg($password) . ' | ' . $cmd . ' -H 0';
+        }
 
-        if (!empty($group)) {
+        if (!empty($groups)) {
             $cmd .= ' -G ' . escapeshellarg(implode(',', $groups));
         }
 
@@ -36,11 +38,11 @@ class Pw extends Posix {
 
         $cmd = 'pw usermod ' . escapeshellarg($name);
 
-        if ($current['password'] !== $password) {
+        if ($password !== null && $current['passwd'] !== $password) {
             $cmd = 'echo ' . escapeshellarg($password) . ' | ' . $cmd . ' -H 0';
         }
 
-        if ($current['gecos'] !== $comment) {
+        if ($comment !== null && $current['gecos'] !== $comment) {
             $cmd .= ' -c ' . escapeshellarg($comment);
         }
 
@@ -49,15 +51,14 @@ class Pw extends Posix {
             $cmd .= ' -G ' . escapeshellarg(implode(',', $groups));
         }
 
-        if ($current['shell'] !== $shell) {
+        if ($shell !== null && $current['shell'] !== $shell) {
             $cmd .= ' -s ' . escapeshellarg($shell);
         }
 
-        if ($current['dir'] !== $home) {
+        if ($home !== null && $current['dir'] !== $home) {
             $cmd .= ' -d ' . escapeshellarg($home);
         }
 
-        echo  $cmd;
         return ExecResult::createFromCommand($cmd . ' 2>&1');
     }
 

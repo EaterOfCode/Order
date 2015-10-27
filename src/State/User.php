@@ -24,6 +24,7 @@ class User extends Desirable {
         $this->shell       = $shell;
         $this->home        = $home;
         $this->comment     = $comment;
+
         if ($provider === null) {
             $this->provider = Runtime::getCurrent()->getUserProvider()->getDefault();
         } else {
@@ -42,17 +43,28 @@ class User extends Desirable {
         } else {
             if ($this->shouldExist === false) {
                 $diff[] = new Diff(Diff::delete, "Deleted user '{$this->name}'");
-            } elseif (
-                $this->password !== $user['password']  ||
-                $this->home     !== $user['home']      ||
-                $this->shell    !== $user['shell']     ||
-                count(array_diff($this->groups, $user['groups'])) > 0
-            ) {
-                $diff[] = new Diff(Diff::change, "Updated user '{$this->name}'");
+            } else {
+                $userDiff = $this->createUserDiff($user);
+                if (count($userDiff) > 0) {
+                    $diff[] = new Diff(Diff::change, "Updated user '{$this->name}' (" . implode(", ", $userDiff) . ")");
+                }
             }
         }
 
         return $diff;
+    }
+
+    private function createUserDiff($user)
+    {
+        $diff = [
+            'password' => $this->password !== null && $this->password !== $user['passwd'],
+            'home' => $this->home !== null && $this->home !== $user['home'],
+            'shell' => $this->shell !== null && $this->shell !== $user['shell'],
+            'group' => $this->groups !== null && count(array_diff($this->groups, $user['groups'])) > 0,
+            'comment' => $this->comment !== null && $this->comment !== $user['gecos']
+       ];
+
+        return array_keys(array_filter($diff));
     }
 
     function apply()
@@ -61,18 +73,15 @@ class User extends Desirable {
 
         if ($user === false) {
             if ($this->shouldExist) {
-                $this->provider->create($this->name, $this->password, $this->groups, $this->shell, $this->home, $this->comment);
+                $this->handleExecResult($this->provider->create($this->name, $this->password, $this->groups, $this->shell, $this->home, $this->comment));
             }
         } else {
             if ($this->shouldExist === false) {
-                $this->provider->remove($this->name);
-            } elseif (
-                $this->password !== $user['password']  ||
-                $this->home     !== $user['home']      ||
-                $this->shell    !== $user['shell']     ||
-                count(array_diff($this->groups, $user['groups'])) > 0
-            ) {
-                $this->provider->update($this->name, $this->password, $this->groups, $this->shell, $this->home, $this->comment);
+                $this->handleExecResult($this->provider->remove($this->name));
+            } else {
+                if(count($this->createUserDiff($user)) > 0) {
+                    $this->handleExecResult($this->provider->update($this->name, $this->password, $this->groups, $this->shell, $this->home, $this->comment));
+                }
             }
         }
     }

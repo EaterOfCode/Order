@@ -8,10 +8,8 @@ class Posix {
         $data = posix_getpwnam($name);
 
         if ($data !== false) {
-
-            posix_initgroups($name, $data['gid']);
             $data['groups'] = array_map(function($group){
-                $group = posix_getpgid($group);
+                $group = posix_getgrgid($group);
                 return $group['name'];
             }, posix_getgroups());
         }
