@@ -3,35 +3,30 @@ order-dossier:
   - \Eater\Order\Paper\Facter
 order-package-provider:
   xbps:
-    os:
-      - void
+    binary: xbps-install
     class: \Eater\Order\Util\PackageProvider\Xbps
   aptget:
-    os:
-      - ubuntu
-      - debian
+    binary: apt-get
     class: \Eater\Order\Util\PackageProvider\AptGet
   pkgng:
     os:
       - freebsd
     class: \Eater\Order\Util\PackageProvider\Pkgng
   emerge:
-    os:
-      - gentoo
+    binary: emerge
     class: \Eater\Order\Util\PackageProvider\Emerge
 order-service-provider:
+  systemd:
+    binary: systemd
+    class: \Eater\Order\Util\ServiceProvider\Systemd
   runit:
-    os:
-      - void
+    binary: runit
     class: \Eater\Order\Util\ServiceProvider\Runit
   openrc:
-    os:
-      - gentoo
+    binary: rc-config
     class: \Eater\Order\Util\ServiceProvider\OpenRC
   debian:
-    os:
-      - debian
-      - ubuntu
+    binary: update-rc.d
     class: \Eater\Order\Util\ServiceProvider\Debian
   freebsd:
     os:
@@ -42,5 +37,8 @@ order-user-provider:
     os:
       - freebsd
     class: \Eater\Order\Util\UserProvider\Pw
+  useradd:
+    binary: useradd
+    class: \Eater\Order\Util\UserProvider\Useradd
 order-include:
   - Law/Wrapped/functions.php

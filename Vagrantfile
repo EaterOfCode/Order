@@ -6,6 +6,7 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
+
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
@@ -14,13 +15,16 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
 
   # FreeBSD
-  config.vm.box = "arkadi/freebsd-10.1-amd64"
+  # config.vm.box = "arkadi/freebsd-10.1-amd64"
 
   # Ubuntu Trusty
   # config.vm.box = "ubuntu/trusty64"
 
   # Ubuntu Precise
   # config.vm.box = "hashicorp/precise64"
+
+  # Ubuntu Wily
+  config.vm.box = "boxcutter/ubuntu1510"
 
   # Gentoo
   # config.vm.box = "cmiles/gentoo-amd64-minimal"
@@ -54,7 +58,7 @@ Vagrant.configure(2) do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
+  #config.vm.provider "virtualbox" do |vb|
   #   # Display the VirtualBox GUI when booting the machine
   #   vb.gui = true
   #

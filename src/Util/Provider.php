@@ -8,6 +8,7 @@ class Provider {
     private $providerByOs = [];
     private $logger;
     private $os;
+    private $osVersion;
     private $default;
 
     public function __construct($logger, $providers, $os, $what)
@@ -20,24 +21,22 @@ class Provider {
                 $providerClass = new $provider['class'];
 
                 $this->providers[$providerName] = $providerClass;
-
-                foreach ($provider['os'] as $defOs) {
-                    $this->providerByOs[$defOs] = $providerClass;
-                }
-
                 $this->logger->addDebug(sprintf('Added %s provider "%s"', $what, $providerName), $provider);
+
+                if (isset($provider['os']) && in_array($os, $provider['os'])) {
+                    $this->logger->addDebug(sprintf('Selected "%s" as default %s provider by os: %s', $providerName, $what, $os));
+                    $this->default = $providerClass;
+                } elseif ($this->default === null && isset($provider['binary']) && ExecResult::createFromCommand('which '. escapeshellarg($provider['binary']))->isSuccess()) {
+                    $this->logger->addDebug(sprintf('Selected "%s" as default %s provider by binary: %s', $providerName, $what, $provider['binary']));
+                    $this->default = $providerClass;
+                }
             } else {
                 $this->logger->addWarning(sprintf('Class "%s" doesn\'t exist for %s provider "%s"', $provider['class'], $what, $providerName));
             }
         }
 
-        if (isset($this->providerByOs[$os])) {
-            $this->default = $this->providerByOs[$os];
-            $name = array_search($this->default, $this->providers);
-
-            $this->logger->addDebug(sprintf('Selected "%s" as default %s provider for this os: "%s"', $name, $what, $os));
-        } else {
-            $this->logger->addAlert(sprintf('No default %s provider for this os: "%s"', $what, $os));
+        if ($this->default === null) {
+            $this->logger->addAlert(sprintf('No default %s provider found.', $what));
         }
     }
 

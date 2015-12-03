@@ -13,6 +13,7 @@ class User extends Definition {
     protected $shell;
     protected $home;
     protected $comment;
+    protected $provider;
     protected $type = 'user';
 
     public function __construct($name, $options = [])
