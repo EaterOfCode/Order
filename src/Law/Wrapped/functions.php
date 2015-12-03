@@ -83,3 +83,10 @@ function paper($name)
         ->getDossier()
         ->get($name);
 }
+
+function config($name)
+{
+    return Runtime::getCurrent()
+        ->getConfig()
+        ->get($name);
+}

@@ -31,6 +31,7 @@ class Runtime {
     private $userProvider;
     private $workingDirectory;
     private $dossier;
+    private $config;
 
     public function __construct()
     {
@@ -55,7 +56,7 @@ class Runtime {
 
         $this->workingDirectory = $workingDirectory;
 
-        $this->orderConfig = new Combined($this->logger, [__DIR__ . '/../config/order', $workingDirectory . '/order']);
+        $this->orderConfig = new Combined($this->logger, [__DIR__ . '/../config/order', $workingDirectory . '/.order-override']);
 
         $dossiers = array_merge($this->orderConfig->get('order-dossier'), $this->orderConfig->has('dossier') ? $this->orderConfig->get('dossier') : []);
 
@@ -93,6 +94,14 @@ class Runtime {
                 ['']
             )
         );
+    }
+
+    public function run($orderConfig, $commit = false)
+    {
+        $this->config = new Combined($this->logger, [$orderConfig]);
+        $entryPoint = $this->config->get('entrypoint') ?: 'main.law.php';
+        $this->load($entryPoint);
+        return $this->apply($commit);
     }
 
     public function addDefinition($defition)
@@ -187,5 +196,10 @@ class Runtime {
     public function getDossier()
     {
         return $this->dossier;
+    }
+
+    public function getConfig()
+    {
+        return $this->config;
     }
 }
