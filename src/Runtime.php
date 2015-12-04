@@ -31,7 +31,9 @@ class Runtime {
     private $userProvider;
     private $workingDirectory;
     private $dossier;
-    private $config;
+
+    private $twigLoader;
+    private $twigEnvironment;
 
     public function __construct()
     {
@@ -46,6 +48,14 @@ class Runtime {
         $this->dossier = new Collector();
 
         $this->logger->addDebug('Runtime constructed');
+
+        $this->twigLoader = new \Twig_Loader_Filesystem([]);
+        $this->twigEnvironment = new \Twig_Environment($this->twigLoader);
+        $function = new \Twig_SimpleFunction('config', function ($name) {
+            return $this->config->get($name);
+        });
+
+        $this->twigEnvironment->addFunction($function);
     }
 
     public function init($workingDirectory)
@@ -94,13 +104,15 @@ class Runtime {
                 ['']
             )
         );
+
+        $this->twigLoader->addPath($workingDirectory);
     }
 
     public function run($orderConfig, $commit = false)
     {
         $this->config = new Combined($this->logger, [$orderConfig]);
         $entryPoint = $this->config->get('entrypoint') ?: 'main.law.php';
-        $this->load($entryPoint);
+        $this->load($this->workingDirectory . '/'. $entryPoint);
         return $this->apply($commit);
     }
 
@@ -201,5 +213,10 @@ class Runtime {
     public function getConfig()
     {
         return $this->config;
+    }
+
+    public function getTwig()
+    {
+        return $this->twigEnvironment;
     }
 }

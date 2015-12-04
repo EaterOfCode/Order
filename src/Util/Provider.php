@@ -26,7 +26,7 @@ class Provider {
                 if (isset($provider['os']) && in_array($os, $provider['os'])) {
                     $this->logger->addDebug(sprintf('Selected "%s" as default %s provider by os: %s', $providerName, $what, $os));
                     $this->default = $providerClass;
-                } elseif ($this->default === null && isset($provider['binary']) && ExecResult::createFromCommand('which '. escapeshellarg($provider['binary']))->isSuccess()) {
+                } elseif ($this->default === null && isset($provider['binary']) && ExecResult::createFromCommand('which '. escapeshellarg($provider['binary']). ' 2>&1')->isSuccess()) {
                     $this->logger->addDebug(sprintf('Selected "%s" as default %s provider by binary: %s', $providerName, $what, $provider['binary']));
                     $this->default = $providerClass;
                 }

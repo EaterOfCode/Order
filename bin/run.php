@@ -12,4 +12,4 @@ $opts = getopt('c:d', ['config:', 'dry']);
 $dry    = isset($opts['d']) || isset($opts['dry']);
 $config = isset($opts['c']) ? $opts['c'] : (isset($opts['config']) ? $opts['config'] : getcwd() . '/order.yaml');
 
-exit($runtime->run($config, !$dry));
+exit(intval($runtime->run($config, !$dry)));

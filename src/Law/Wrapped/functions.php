@@ -90,3 +90,10 @@ function config($name)
         ->getConfig()
         ->get($name);
 }
+
+function template($file, $vars)
+{
+    return Runtime::getCurrent()
+        ->getTwig()
+        ->render($file, $vars);
+}
