@@ -15,6 +15,9 @@
             "Eater\\Order\\":"src/"
         }
     },
+    "bin": [
+        "bin/order-apply"
+    ],
     "require": {
         "league/flysystem": "^1.0",
         "league/flysystem-memory": "^1.0",
